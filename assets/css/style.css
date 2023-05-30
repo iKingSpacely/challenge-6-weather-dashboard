@@ -1,7 +1,24 @@
 .header {
     padding: 1px;
-    background-color: #007aeb; 
+    background-image: linear-gradient(to right, rgb(129, 168, 250), rgb(0, 48, 182));
     color: #fff;
     text-align: center;
     max-width: 100%;
+}
+
+h1 {
+    padding-left: 250px;
+}
+
+.col-sm-2 {
+    padding-left: 25px;
+}
+
+.col-md-3 {
+    margin-left: 16.6%;
+}
+
+.btn-primary {
+    background-color: lightblue;
+    border-color: lightblue;
 }
