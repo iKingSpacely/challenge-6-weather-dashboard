@@ -1,6 +1,7 @@
-var searchForm = document.querySelector('#search-form')
-var searchInput = document.querySelector('#search-input')
-var todayWeather = document.querySelector('#today') 
+var searchForm = document.querySelector('#search-form');
+var searchInput = document.querySelector('#search-input');
+var todayWeather = document.querySelector('#today');
+
 const apiKey = "0c6fffe0f25abe24ecc6f2cbd320965e"
    
 
@@ -35,7 +36,7 @@ function renderData(name, data) {
     header.textContent = `${cityName} ${currentDay}`
     tempD.textContent = `F: ${temp}`
     windSpeedD.textContent = `Wind Speed: ${windSpeed}`
-    humidityD.textContent = `Humidity: ${humidity}`
+    humidityD.textContent = `Humidity: ${humidity}%`
 
     header.append(image);
     cardBody.append(header, tempD, windSpeedD, humidityD);
@@ -59,9 +60,8 @@ function currentWeather(data) {
             console.log(data);
             renderData(name, data)
             
-        })
-}
-
+        });
+};
 
 function getLatLon(event) {
     event.preventDefault();
@@ -81,7 +81,44 @@ function getLatLon(event) {
         })
 };
 
+function renderFiveDay(forecast) {
+    var temp = forecast.main.temp;
+    var humidity = forecast.main.temp;
+    var windSpeed = forecast.wind.speed;
+    var image = forecast.weather[0].description;
+    var icon = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
 
+    var image = document.createElement('img');
+    var cardBody = document.createElement('div');
+    var header = document.createElement('h3');
+    var p = document.createElement('p');
+    var card = document.createElement('div');
+    var tempD = document.createElement('p');
+    var humidityD = document.createElement('p');
+    var windSpeedD = document.createElement('p');
+
+    cardBody.setAttribute("class", "card-body");
+    header.setAttribute("class", "header");
+    p.setAttribute("class", "card-text");
+    card.setAttribute("class", "card" );
+    image.setAttribute("class", "icon");
+    image.setAttribute("src", icon);
+    image.setAttribute("alt", windSpeed);
+    tempD.setAttribute("class", "card-text");
+    humidityD.setAttribute("class", "card-text");
+    windSpeedD.setAttribute("class", "card-text");
+    
+    header.textContent = `${cityName} ${currentDay}`
+    tempD.textContent = `F: ${temp}`
+    windSpeedD.textContent = `Wind Speed: ${windSpeed}`
+    humidityD.textContent = `Humidity: ${humidity}%`
+
+    header.append(image);
+    cardBody.append(header, tempD, windSpeedD, humidityD);
+    todayWeather.innerHTML = '';
+    todayWeather.append(cardBody);
+
+};
 
 
 
