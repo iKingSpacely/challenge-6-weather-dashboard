@@ -2,7 +2,9 @@ var searchForm = document.querySelector('#search-form');
 var searchInput = document.querySelector('#search-input');
 var todayWeather = document.querySelector('#today');
 var dailyForecast = document.querySelector('#fiver');
-var searchHistory = document.querySelector("#search-history");
+var searchContainer = document.querySelector("#search-history");
+
+var searchHistory = [];
 
 const apiKey = "0c6fffe0f25abe24ecc6f2cbd320965e"
    
@@ -50,7 +52,7 @@ function renderData(name, data) {
 
 function filterFiveDay(list) {
 
-
+dailyForecast.innerHTML = '';
 
     var dayOne = dayjs().add(1, 'day').startOf('day').unix();
     var dayFive = dayjs().add(6, 'day').startOf('day').unix();
@@ -97,7 +99,6 @@ function currentWeather(data) {
 function forecast(data) {
     var lat = data.lat;
     var lon = data.lon;
-    var name = data.name;
 
     var apiURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
 
@@ -118,11 +119,13 @@ function getLatLon(search) {
     
     var apiURL = `http://api.openweathermap.org/geo/1.0/direct?q=${search}&limit=${limit}&appid=${apiKey}`
 
+
     fetch(apiURL)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
+            setSearchHistory(search);
             // console.log(data[0]);
             currentWeather(data[0]);
             forecast(data[0]);
@@ -132,7 +135,7 @@ function getLatLon(search) {
 
 function renderFiveDay(list) {
     var temp = list.main.temp;
-    console.log(temp);
+    // console.log(temp);
     var humidity = list.main.humidity;
     var windSpeed = list.wind.speed;
     var description = list.weather[0].description;
@@ -172,7 +175,7 @@ function renderFiveDay(list) {
     humidityD.textContent = `Humidity: ${humidity}%`
 
     dailyForecast.append(column);
-
+    
 };
 
 function handleSearchSubmit(event) {
@@ -186,18 +189,55 @@ function handleSearchSubmit(event) {
         searchInput.value = '';
 };
 
-function setSearchHisotry(search) {
+function clickHistory(event) {
+    var button = event.target;
+    var search = button.getAttribute("data-search");
 
-    if (searchHistory.indexOf(search) == -1) {
-        alert('already exists')
+    getLatLon(search);
+};
+
+
+function getSearchHistory() {
+    var getLocal = localStorage.getItem("city")
+
+    if (getLocal) {
+        searchHistory = JSON.parse(getLocal);
+        
     };
-    searchHistory.push(search)
-    console.log(searchHistory);
+    searchStorage();
+};
 
-}
+function searchStorage() {
 
+    searchContainer.innerHTML = '';
+
+    for (let index = 0; index < searchHistory.length; index++) {
+        var button = document.createElement('button')
+        button.setAttribute("data-search", searchHistory[index]);
+        button.setAttribute("type", "button");
+        button.setAttribute('aria-controls', "forecast")
+        button.textContent = searchHistory[index];
+        searchContainer.append(button);
+    };
+};
+
+function setSearchHistory(search) {
+
+
+    // if (searchHistory.indexOf(search) == -1) {
+    //     return;
+    // };
+
+    searchHistory.push(search);
+    localStorage.setItem("city", JSON.stringify(searchHistory));
+    searchStorage();
+    // console.log(searchHistory);
+
+};
+
+getSearchHistory();
 
 searchForm.addEventListener('submit', handleSearchSubmit);
 
-// searchHistory.addEventListener('click', storeSearchHistory);
+searchContainer.addEventListener('click', clickHistory);
 
