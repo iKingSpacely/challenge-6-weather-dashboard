@@ -22,3 +22,8 @@ h1 {
     background-color: lightblue;
     border-color: lightblue;
 }
+
+.card-styles {
+    display: flex;
+    flex-direction: row;
+}
